@@ -3,9 +3,9 @@ import { useRef } from "react";
 import { Mail, Github, Linkedin } from "lucide-react";
 
 const links = [
-  { icon: Mail, label: "Email", href: "mailto:achalsharma@example.com", display: "achalsharma@example.com" },
-  { icon: Github, label: "GitHub", href: "https://github.com/", display: "github.com/achalsharma" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/", display: "linkedin.com/in/achalsharma" },
+  { icon: Mail, label: "Email", href: "mailto:achalsharma975@gmail.com", display: "achalsharma975@gmail.com" },
+  { icon: Github, label: "GitHub", href: "https://github.com/ac12sharma", display: "github.com/ac12sharma" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/achal-sharma-8032822a1", display: "linkedin.com/in/achal-sharma" },
 ];
 
 const ContactSection = () => {
@@ -37,7 +37,7 @@ const ContactSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.15 * i, duration: 0.4 }}
-                className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-3 hover-lift w-full sm:w-auto"
+                className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-3 hover-lift w-full sm:w-auto transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_-6px_hsl(var(--glow)/0.15)]"
               >
                 <Icon size={18} className="text-primary shrink-0" />
                 <span className="text-sm text-foreground">{label}</span>

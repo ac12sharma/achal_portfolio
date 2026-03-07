@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
-import { ArrowDown, FolderOpen } from "lucide-react";
+import { ArrowDown, FolderOpen, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center section-padding pt-32">
-      {/* Gradient orb */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto relative z-10">
@@ -43,6 +42,12 @@ const HeroSection = () => {
               <a href="#projects">
                 <FolderOpen size={18} />
                 View Projects
+              </a>
+            </Button>
+            <Button asChild size="lg" className="gap-2 font-medium">
+              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+                <Download size={18} />
+                Download Resume
               </a>
             </Button>
             <Button asChild variant="outline" size="lg" className="gap-2 font-medium border-border hover:bg-secondary">
