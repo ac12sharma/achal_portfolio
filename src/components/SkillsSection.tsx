@@ -45,20 +45,25 @@ const SkillsSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.15 * gi, duration: 0.5 }}
-                className="bg-card border border-border rounded-xl p-6"
+                className="bg-card border border-border rounded-xl p-6 hover:border-primary/30 hover-lift transition-all duration-300"
               >
                 <div className="flex items-center gap-3 mb-5">
-                  <Icon size={20} className="text-primary" />
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Icon size={18} className="text-primary" />
+                  </div>
                   <h3 className="font-semibold text-foreground">{group.title}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {group.skills.map((skill) => (
-                    <span
+                  {group.skills.map((skill, si) => (
+                    <motion.span
                       key={skill}
-                      className="px-3 py-1.5 text-sm font-mono rounded-lg bg-secondary text-foreground border border-border hover:border-primary/40 transition-colors cursor-default"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={inView ? { opacity: 1, scale: 1 } : {}}
+                      transition={{ delay: 0.15 * gi + 0.05 * si, duration: 0.3 }}
+                      className="px-3 py-1.5 text-sm font-mono rounded-lg bg-secondary text-foreground border border-border hover:border-primary/50 hover:bg-primary/10 hover:text-primary transition-all duration-200 cursor-default"
                     >
                       {skill}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
               </motion.div>

@@ -3,9 +3,24 @@ import { useRef } from "react";
 import { Mail, Github, Linkedin } from "lucide-react";
 
 const links = [
-  { icon: Mail, label: "Email", href: "mailto:achalsharma975@gmail.com", display: "achalsharma975@gmail.com" },
-  { icon: Github, label: "GitHub", href: "https://github.com/ac12sharma", display: "github.com/ac12sharma" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/achal-sharma-8032822a1", display: "linkedin.com/in/achal-sharma" },
+  {
+    icon: Mail,
+    label: "Email",
+    href: "mailto:achalsharma975@gmail.com",
+    display: "achalsharma975@gmail.com",
+  },
+  {
+    icon: Github,
+    label: "GitHub",
+    href: "https://github.com/ac12sharma",
+    display: "github.com/ac12sharma",
+  },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/achal-sharma-8032822a1",
+    display: "linkedin.com/in/achal-sharma",
+  },
 ];
 
 const ContactSection = () => {
@@ -24,23 +39,29 @@ const ContactSection = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-2">Get In Touch</h2>
           <div className="w-16 h-1 bg-primary rounded-full mb-6 mx-auto" />
           <p className="text-muted-foreground mb-10">
-            I'm always open to discussing new opportunities, projects, or collaborations.
+            I'm always open to discussing new opportunities, projects, or
+            collaborations.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch justify-center gap-4">
             {links.map(({ icon: Icon, label, href, display }, i) => (
               <motion.a
                 key={label}
                 href={href}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={href.startsWith("mailto") ? undefined : "_blank"}
+                rel={href.startsWith("mailto") ? undefined : "noopener noreferrer"}
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.15 * i, duration: 0.4 }}
-                className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-3 hover-lift w-full sm:w-auto transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_-6px_hsl(var(--glow)/0.15)]"
+                className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-4 hover-lift w-full sm:w-auto transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_-6px_hsl(var(--glow)/0.15)]"
               >
                 <Icon size={18} className="text-primary shrink-0" />
-                <span className="text-sm text-foreground">{label}</span>
+                <div className="text-left">
+                  <p className="text-xs text-muted-foreground">{label}</p>
+                  <p className="text-sm font-mono text-foreground truncate max-w-[180px]">
+                    {display}
+                  </p>
+                </div>
               </motion.a>
             ))}
           </div>
