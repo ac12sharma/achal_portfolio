@@ -117,3 +117,10 @@
   background: hsl(var(--primary) / 0.2);
   color: hsl(var(--foreground));
 }
+
+/* Hide native cursor on fine-pointer (desktop) devices — replaced by CustomCursor */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    cursor: none;
+  }
+}

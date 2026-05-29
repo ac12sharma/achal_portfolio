@@ -1,5 +1,5 @@
+import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
 import { User, Code, Brain, Cpu } from "lucide-react";
 
 const highlights = [
@@ -9,10 +9,43 @@ const highlights = [
 ];
 
 const stats = [
-  { value: "6+", label: "Projects" },
-  { value: "2", label: "Internships" },
-  { value: "15+", label: "Technologies" },
+  { num: 6, suffix: "+", label: "Projects" },
+  { num: 2, suffix: "", label: "Internships" },
+  { num: 15, suffix: "+", label: "Technologies" },
 ];
+
+const CountUp = ({
+  target,
+  suffix,
+  inView,
+}: {
+  target: number;
+  suffix: string;
+  inView: boolean;
+}) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let frame = 0;
+    const totalFrames = 48;
+    const timer = setInterval(() => {
+      frame++;
+      // easeOutCubic so it decelerates into the final value
+      const eased = 1 - Math.pow(1 - frame / totalFrames, 3);
+      setCount(Math.round(eased * target));
+      if (frame >= totalFrames) clearInterval(timer);
+    }, 1000 / 60);
+    return () => clearInterval(timer);
+  }, [inView, target]);
+
+  return (
+    <>
+      {count}
+      {suffix}
+    </>
+  );
+};
 
 const AboutSection = () => {
   const ref = useRef(null);
@@ -45,15 +78,18 @@ const AboutSection = () => {
                 applications.
               </p>
 
+              {/* Count-up stats */}
               <div className="flex gap-10 pt-4">
-                {stats.map(({ value, label }, i) => (
+                {stats.map(({ num, suffix, label }, i) => (
                   <motion.div
                     key={label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
                   >
-                    <p className="text-3xl font-bold text-gradient">{value}</p>
+                    <p className="text-3xl font-bold text-gradient">
+                      <CountUp target={num} suffix={suffix} inView={inView} />
+                    </p>
                     <p className="text-xs text-muted-foreground mt-1">{label}</p>
                   </motion.div>
                 ))}
@@ -70,7 +106,9 @@ const AboutSection = () => {
                   className="flex items-center gap-3 bg-surface rounded-lg px-4 py-3 border border-border hover-lift"
                 >
                   <Icon size={20} className="text-primary shrink-0" />
-                  <span className="text-sm font-medium text-foreground">{label}</span>
+                  <span className="text-sm font-medium text-foreground">
+                    {label}
+                  </span>
                 </motion.div>
               ))}
             </div>
