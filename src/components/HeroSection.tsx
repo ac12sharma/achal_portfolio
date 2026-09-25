@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowDown, FolderOpen, Download, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const roles = [
@@ -9,129 +9,113 @@ const roles = [
   "Embedded Systems Developer",
 ];
 
-const HeroSection = () => {
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const useTypewriter = (enabled: boolean) => {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState("");
-  const [phase, setPhase] = useState<"typing" | "pause" | "deleting">("typing");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return;
     const target = roles[roleIndex];
-    if (phase === "typing") {
-      if (displayed.length < target.length) {
-        const t = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 75);
-        return () => clearTimeout(t);
-      } else {
-        const t = setTimeout(() => setPhase("pause"), 2200);
-        return () => clearTimeout(t);
-      }
-    } else if (phase === "pause") {
-      const t = setTimeout(() => setPhase("deleting"), 300);
-      return () => clearTimeout(t);
+    let t: ReturnType<typeof setTimeout>;
+    if (!deleting && displayed.length < target.length) {
+      t = setTimeout(() => setDisplayed(target.slice(0, displayed.length + 1)), 70);
+    } else if (!deleting) {
+      t = setTimeout(() => setDeleting(true), 2400);
+    } else if (displayed.length > 0) {
+      t = setTimeout(() => setDisplayed((prev) => prev.slice(0, -1)), 35);
     } else {
-      if (displayed.length > 0) {
-        const t = setTimeout(() => setDisplayed((prev) => prev.slice(0, -1)), 35);
-        return () => clearTimeout(t);
-      } else {
-        setRoleIndex((i) => (i + 1) % roles.length);
-        setPhase("typing");
-      }
+      setDeleting(false);
+      setRoleIndex((i) => (i + 1) % roles.length);
     }
-  }, [displayed, phase, roleIndex]);
+    return () => clearTimeout(t);
+  }, [enabled, displayed, deleting, roleIndex]);
+
+  return displayed;
+};
+
+const NameLine = ({ children, delay, className = "" }: { children: string; delay: number; className?: string }) => (
+  <span className="block overflow-hidden pb-[0.08em] pt-[0.04em]">
+    <motion.span
+      className={`block ${className}`}
+      initial={{ y: "110%" }}
+      animate={{ y: 0 }}
+      transition={{ duration: 1, delay, ease }}
+    >
+      {children}
+    </motion.span>
+  </span>
+);
+
+const HeroSection = () => {
+  const reduceMotion = useReducedMotion();
+  const typed = useTypewriter(!reduceMotion);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center section-padding pt-32">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="container mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-3xl"
+    <section className="relative flex min-h-[100svh] items-end pb-16 pt-32 md:pb-24">
+      <div className="container mx-auto">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-medium mb-6"
-          >
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
-            Open to Opportunities
-          </motion.div>
+          <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true" />
+          Open to opportunities
+        </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-primary font-mono text-sm mb-4 tracking-wider"
-          >
-            Hello, I'm
-          </motion.p>
+        <h1 className="font-heading text-display font-bold text-foreground">
+          <NameLine delay={0.1}>Achal</NameLine>
+          <NameLine delay={0.22} className="text-primary">Sharma</NameLine>
+        </h1>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold font-heading leading-tight mb-4">
-            <span className="text-foreground">Achal</span>{" "}
-            <span className="text-gradient glow-text">Sharma</span>
-          </h1>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7, ease }}
+          className="mt-10 grid gap-10 md:mt-12 md:grid-cols-[minmax(0,1fr)_auto] md:items-end"
+        >
+          <div className="max-w-[60ch]">
+            <p className="text-lead text-foreground">
+              Computer Engineering student at Trinity College Dublin.
+            </p>
+            <p className="mt-1 text-lead text-muted-foreground">
+              Building intelligent systems, scalable backend architectures,
+              and machine learning applications.
+            </p>
+            <p className="mt-6 h-6 font-mono text-sm text-primary">
+              {reduceMotion ? (
+                roles.join(" · ")
+              ) : (
+                <>
+                  <span className="sr-only">{roles.join(", ")}</span>
+                  <span aria-hidden="true">
+                    {typed}
+                    <span className="ml-px animate-blink">▍</span>
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
 
-          <h2 className="text-xl md:text-2xl text-muted-foreground font-medium mb-4">
-            Computer Engineering Student at Trinity College Dublin
-          </h2>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="h-8 mb-6"
-          >
-            <span className="font-mono text-primary text-base">
-              {displayed}
-              <span className="animate-blink ml-px">|</span>
-            </span>
-          </motion.div>
-
-          <p className="text-muted-foreground text-lg max-w-xl mb-10 leading-relaxed">
-            Building intelligent systems, scalable backend architectures, and
-            machine learning applications.
-          </p>
-
-          <div className="flex flex-wrap gap-4">
-            <Button asChild size="lg" className="gap-2 font-medium">
-              <a href="#projects">
-                <FolderOpen size={18} />
-                View Projects
-              </a>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button asChild size="lg">
+              <a href="#projects">View projects</a>
             </Button>
-            <Button asChild size="lg" className="gap-2 font-medium">
+            <Button asChild size="lg" variant="outline" className="gap-2">
               <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
-                <Download size={18} />
-                Download Resume
+                <Download size={16} aria-hidden="true" />
+                Resume
               </a>
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="gap-2 font-medium border-border hover:bg-secondary"
-            >
-              <a href="#contact">
-                <ArrowDown size={18} />
-                Contact
-              </a>
+            <Button asChild size="lg" variant="link" className="px-0 text-muted-foreground hover:text-foreground sm:ml-3">
+              <a href="#contact">Get in touch</a>
             </Button>
           </div>
         </motion.div>
       </div>
-
-      <motion.a
-        href="#about"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-primary transition-colors animate-bounce"
-        aria-label="Scroll to About section"
-      >
-        <ChevronDown size={28} />
-      </motion.a>
     </section>
   );
 };

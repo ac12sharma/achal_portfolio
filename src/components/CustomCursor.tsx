@@ -18,8 +18,9 @@ const CustomCursor = () => {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    // Only activate on real pointer devices — not phones/tablets
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    // Must match the CSS query in index.css that hides the native cursor.
+    const query = "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+    if (!window.matchMedia(query).matches) return;
     setEnabled(true);
 
     const onMove = (e: MouseEvent) => {

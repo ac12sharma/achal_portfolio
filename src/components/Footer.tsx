@@ -24,7 +24,7 @@ const Footer = () => (
     <div className="container mx-auto">
       <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
         <div className="text-center md:text-left">
-          <a href="#" className="text-xl font-bold font-mono text-gradient">
+          <a href="#" className="font-heading text-xl font-bold text-foreground" aria-label="Achal Sharma, back to top">
             AS
           </a>
           <p className="text-xs text-muted-foreground mt-1">

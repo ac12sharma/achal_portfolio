@@ -57,6 +57,11 @@ export default {
         body: ["var(--font-body)"],
         mono: ["var(--font-mono)"],
       },
+      fontSize: {
+        display: ["clamp(4.5rem, 19vw, 15rem)", { lineHeight: "0.9", letterSpacing: "-0.025em" }],
+        title: ["clamp(1.5rem, 2.2vw, 1.875rem)", { lineHeight: "1.15", letterSpacing: "-0.02em" }],
+        lead: ["1.1875rem", { lineHeight: "1.65" }],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
