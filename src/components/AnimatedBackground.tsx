@@ -65,14 +65,24 @@ const AnimatedBackground = () => {
       animationId = requestAnimationFrame(draw);
     };
 
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const handleResize = () => {
       resize();
       initParticles();
+      if (reduceMotion) drawStatic();
+    };
+
+    // Reduced motion: render a single still frame instead of a running loop.
+    const drawStatic = () => {
+      draw();
+      cancelAnimationFrame(animationId);
     };
 
     resize();
     initParticles();
-    draw();
+    if (reduceMotion) drawStatic();
+    else draw();
     window.addEventListener("resize", handleResize);
 
     return () => {

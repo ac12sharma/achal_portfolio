@@ -1,74 +1,44 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { Mail, Github, Linkedin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import Section from "@/components/Section";
 
-const links = [
-  {
-    icon: Mail,
-    label: "Email",
-    href: "mailto:achalsharma975@gmail.com",
-    display: "achalsharma975@gmail.com",
-  },
-  {
-    icon: Github,
-    label: "GitHub",
-    href: "https://github.com/ac12sharma",
-    display: "github.com/ac12sharma",
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/achal-sharma-8032822a1",
-    display: "linkedin.com/in/achal-sharma",
-  },
+const EMAIL = "achalsharma975@gmail.com";
+
+const profiles = [
+  { label: "GitHub", href: "https://github.com/ac12sharma" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/achal-sharma-8032822a1" },
 ];
 
-const ContactSection = () => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+const ContactSection = () => (
+  <Section id="contact" title="Contact">
+    <p className="max-w-[65ch] text-lead text-muted-foreground">
+      I'm always open to discussing new opportunities, projects, or
+      collaborations.
+    </p>
 
-  return (
-    <section id="contact" className="section-padding">
-      <div className="container mx-auto" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-xl mx-auto"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-2">Get In Touch</h2>
-          <div className="w-16 h-1 bg-primary rounded-full mb-6 mx-auto" />
-          <p className="text-muted-foreground mb-10">
-            I'm always open to discussing new opportunities, projects, or
-            collaborations.
-          </p>
+    <a
+      href={`mailto:${EMAIL}`}
+      className="mt-6 inline-block break-all font-heading text-[clamp(1.375rem,3.2vw,2.25rem)] font-semibold text-foreground underline decoration-primary/40 decoration-2 underline-offset-8 transition-colors hover:decoration-primary"
+    >
+      {EMAIL}
+    </a>
 
-          <div className="flex flex-col sm:flex-row items-stretch justify-center gap-4">
-            {links.map(({ icon: Icon, label, href, display }, i) => (
-              <motion.a
-                key={label}
-                href={href}
-                target={href.startsWith("mailto") ? undefined : "_blank"}
-                rel={href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.15 * i, duration: 0.4 }}
-                className="flex items-center gap-3 bg-card border border-border rounded-xl px-5 py-4 hover-lift w-full sm:w-auto transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_-6px_hsl(var(--glow)/0.15)]"
-              >
-                <Icon size={18} className="text-primary shrink-0" />
-                <div className="text-left">
-                  <p className="text-xs text-muted-foreground">{label}</p>
-                  <p className="text-sm font-mono text-foreground truncate max-w-[180px]">
-                    {display}
-                  </p>
-                </div>
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+    <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+      {profiles.map(({ label, href }) => (
+        <li key={label}>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {label}
+            <ArrowUpRight size={16} aria-hidden="true" />
+            <span className="sr-only">(opens in a new tab)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Section>
+);
 
 export default ContactSection;

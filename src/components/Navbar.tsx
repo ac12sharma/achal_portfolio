@@ -40,34 +40,34 @@ const Navbar = () => {
   }, []);
 
   return (
-    <motion.nav
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : ""
+    <nav
+      aria-label="Primary"
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+        scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : "border-b border-transparent"
       }`}
     >
       <div className="container mx-auto flex items-center justify-between py-4">
-        <a href="#" className="text-xl font-bold font-mono text-gradient">
+        <a href="#" className="font-heading text-xl font-bold text-foreground" aria-label="Achal Sharma, back to top">
           AS
         </a>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className={`text-sm transition-colors duration-200 ${
-                activeSection === link.href.slice(1)
-                  ? "text-primary font-medium"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const active = activeSection === link.href.slice(1);
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "location" : undefined}
+                className={`text-sm transition-colors duration-200 ${
+                  active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </div>
 
         {/* Mobile toggle */}
@@ -75,6 +75,8 @@ const Navbar = () => {
           className="md:hidden text-foreground hover:text-primary transition-colors"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-menu"
         >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -83,29 +85,32 @@ const Navbar = () => {
       {/* Mobile menu */}
       {mobileOpen && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
+          id="mobile-menu"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border"
         >
           <div className="container mx-auto py-4 flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={`text-sm transition-colors ${
-                  activeSection === link.href.slice(1)
-                    ? "text-primary font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const active = activeSection === link.href.slice(1);
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  aria-current={active ? "location" : undefined}
+                  className={`text-base transition-colors ${
+                    active ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
         </motion.div>
       )}
-    </motion.nav>
+    </nav>
   );
 };
 
